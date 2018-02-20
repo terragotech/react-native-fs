@@ -124,6 +124,7 @@ public class RNFSManager extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void readFile(String filepath, Promise promise) {
+    FileInputStream inputStream = null;
     try {
       File file = new File(filepath);
 
@@ -137,7 +138,7 @@ public class RNFSManager extends ReactContextBaseJavaModule {
         return;
       }
 
-      FileInputStream inputStream = new FileInputStream(filepath);
+      inputStream = new FileInputStream(filepath);
       byte[] buffer = new byte[(int)file.length()];
       inputStream.read(buffer);
 
@@ -147,7 +148,16 @@ public class RNFSManager extends ReactContextBaseJavaModule {
     } catch (Exception ex) {
       ex.printStackTrace();
       reject(promise, filepath, ex);
+    } finally {
+      if(inputStream != null){
+        try{
+          inputStream.close();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
     }
+
   }
 
   @ReactMethod
