@@ -220,6 +220,7 @@ public class RNFSManager extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void hash(String filepath, String algorithm, Promise promise) {
+    FileInputStream inputStream = null;
     try {
       Map<String, String> algorithms = new HashMap<>();
 
@@ -246,7 +247,7 @@ public class RNFSManager extends ReactContextBaseJavaModule {
 
       MessageDigest md = MessageDigest.getInstance(algorithms.get(algorithm));
 
-      FileInputStream inputStream = new FileInputStream(filepath);
+      inputStream = new FileInputStream(filepath);
       byte[] buffer = new byte[(int)file.length()];
 
       int read;
@@ -262,6 +263,14 @@ public class RNFSManager extends ReactContextBaseJavaModule {
     } catch (Exception ex) {
       ex.printStackTrace();
       reject(promise, filepath, ex);
+    }finally {
+      if(inputStream != null){
+        try{
+          inputStream.close();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
     }
   }
 
