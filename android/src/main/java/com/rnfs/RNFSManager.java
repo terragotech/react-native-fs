@@ -63,12 +63,19 @@ public class RNFSManager extends ReactContextBaseJavaModule {
 
       FileOutputStream outputStream = new FileOutputStream(filepath, false);
       outputStream.write(bytes);
-      outputStream.close();
 
       promise.resolve(null);
     } catch (Exception ex) {
       ex.printStackTrace();
       reject(promise, filepath, ex);
+    } finally {
+      if(outputStream != null){
+        try{
+          outputStream.close();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -103,18 +110,31 @@ public class RNFSManager extends ReactContextBaseJavaModule {
       if (position < 0) {
         FileOutputStream outputStream = new FileOutputStream(filepath, true);
         outputStream.write(bytes);
-        outputStream.close();
       } else {
         RandomAccessFile file = new RandomAccessFile(filepath, "rw");
         file.seek(position);
         file.write(bytes);
-        file.close();
       }
 
       promise.resolve(null);
     } catch (Exception ex) {
       ex.printStackTrace();
       reject(promise, filepath, ex);
+    } finally {
+      if(file != null){
+        try{
+          file.close();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
+      if(outputStream != null){
+        try{
+          outputStream.close();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
     }
   }
 
