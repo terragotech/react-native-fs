@@ -79,12 +79,19 @@ public class RNFSManager extends ReactContextBaseJavaModule {
 
       FileOutputStream outputStream = new FileOutputStream(filepath, true);
       outputStream.write(bytes);
-      outputStream.close();
 
       promise.resolve(null);
     } catch (Exception ex) {
       ex.printStackTrace();
       reject(promise, filepath, ex);
+    } finally {
+      if(outputStream != null){
+        try{
+          outputStream.close();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -161,7 +168,7 @@ public class RNFSManager extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void read(String filepath, int length, int position, Promise promise){
+  public void read(String filepath, int length, int position, Promise promise) {
     try {
       File file = new File(filepath);
 
@@ -178,14 +185,22 @@ public class RNFSManager extends ReactContextBaseJavaModule {
       FileInputStream inputStream = new FileInputStream(filepath);
       byte[] buffer = new byte[length];
       inputStream.skip(position);
-      inputStream.read(buffer,0,length);
+      inputStream.read(buffer, 0, length);
 
       String base64Content = Base64.encodeToString(buffer, Base64.NO_WRAP);
 
       promise.resolve(base64Content);
     } catch (Exception ex) {
-        ex.printStackTrace();
-        reject(promise, filepath, ex);
+      ex.printStackTrace();
+      reject(promise, filepath, ex);
+    } finally {
+      if (inputStream != null) {
+        try {
+          inputStream.close();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 
