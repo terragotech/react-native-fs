@@ -345,9 +345,11 @@ public class RNFSManager extends ReactContextBaseJavaModule {
   }
 
   private void copyFile(String filepath, String destPath) throws IOException {
-    InputStream in = new FileInputStream(filepath);
-    OutputStream out = new FileOutputStream(destPath);
+    InputStream in = null;
+    OutputStream out = null;
     try{
+      in = new FileInputStream(filepath);
+      out = new FileOutputStream(destPath);
       byte[] buffer = new byte[1024];
       int length;
       while ((length = in.read(buffer)) > 0) {
