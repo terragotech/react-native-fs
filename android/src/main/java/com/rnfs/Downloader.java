@@ -135,8 +135,20 @@ public class Downloader extends AsyncTask<DownloadParams, int[], DownloadResult>
       res.statusCode = statusCode;
       res.bytesWritten = total;
     } finally {
-      if (output != null) output.close();
-      if (input != null) input.close();
+      if (output != null) {
+        try {
+          output.close();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+      if (input != null) {
+        try {
+          input.close();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
       if (connection != null) connection.disconnect();
     }
   }
